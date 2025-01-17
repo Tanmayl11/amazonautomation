@@ -72,47 +72,43 @@ public class Homepage {
     // return true;
     // }
     public boolean areProductsDisplayed(String productName) {
-        // Dynamically create XPath for the product locator
         By productLocator = By.xpath(
-                "//span[@class='a-size-medium a-color-base a-text-normal' and contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '"
-                        + productName.toLowerCase() + "')]");
+            "//h2[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '" + productName.toLowerCase() + "')]"
+        );
+    
         try {
-            // Wait for the presence of all product elements
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
             wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(productLocator));
-
-            // Find matching product elements
+    
             List<WebElement> productElements = driver.findElements(productLocator);
-            if (productElements.isEmpty()) {
-                System.out.println("No products found with name: '" + productName + "'");
-                return false;
-            } else {
-                // Click the first matching product
-                for (WebElement product : productElements) {
-                    String productText = product.getText().trim();
-                    System.out.println("Product is displayed: " + productText);
-
-                    // Check for the matching product name
-                    if (productText.toLowerCase().contains(productName.toLowerCase())) {
-                        // Click the product link
-                        product.click();
-                        System.out.println("Clicked on product: " + productText);
-
-                        // Switch to the new window that opens after clicking the product
-                        for (String windowHandle : driver.getWindowHandles()) {
-                            driver.switchTo().window(windowHandle);
-                        }
-                        System.out.println("Switched to the new window.");
-                        return true;
+            System.out.println("Number of matching products: " + productElements.size());
+    
+            for (WebElement product : productElements) {
+                String productText = product.getText().trim();
+                System.out.println("Found product title: " + productText);
+    
+                if (productText.toLowerCase().contains(productName.toLowerCase())) {
+                    product.click(); // Click the product
+                    System.out.println("Clicked on product: " + productText);
+    
+                    // Switch to the new window
+                    for (String windowHandle : driver.getWindowHandles()) {
+                        driver.switchTo().window(windowHandle);
                     }
+                    System.out.println("Switched to the new window.");
+                    return true;
                 }
-                return false;
             }
+    
+            System.out.println("No matching product found for name: '" + productName + "'");
+            return false;
+    
         } catch (TimeoutException e) {
             System.out.println("Timeout: No products with name '" + productName + "' are displayed.");
             return false;
         }
     }
+    
 
     // public boolean isProductDisplayed(String productName) {
     // By productLocator = By.xpath("//span[@class='a-size-medium a-color-base

@@ -16,7 +16,7 @@ public class DriverSingleton {
      public static WebDriver getDriver() {
          if (driver == null) {
              // Set up WebDriverManager and initialize the driver
-             WebDriverManager.chromedriver().driverVersion("129.0.6668.59").setup();
+             WebDriverManager.chromedriver().setup();
              driver = new ChromeDriver();
  
              // Maximize the window and set an implicit wait if necessary
@@ -24,6 +24,11 @@ public class DriverSingleton {
          }
          return driver;
      }
+
+     public static void logStatus(String type, String message, String status) {
+        System.out.println(String.format("%s |  %s  |  %s | %s",
+                String.valueOf(java.time.LocalDateTime.now()), type, message, status));
+    }
  
      // Method to quit the driver
      public static void quitDriver() {

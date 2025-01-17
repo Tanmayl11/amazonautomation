@@ -41,55 +41,42 @@ public class testCase_01 {
 		logStatus("driver", "Initializing driver", "Started");
 	}
 
-    @Test(dataProvider = "data-provider", dataProviderClass = DP.class, description = "Verify the search and filter flow", priority = 1, groups ={"SearchAndFilterflow"})
-    public void TestCase01(String searchtext, String username, String password) throws InterruptedException, TimeoutException, IOException{
-        extentTest = extentReports.createTest("search functionality check");
-     softAssert = new SoftAssert();
-     Homepage homePage = new Homepage(driver);
-     softAssert.assertTrue(homePage.checkNavigation(), "Navigation of Home page is failed");
-		Thread.sleep(3000);
-        LoginPage loginPage = new LoginPage(driver);
-        homePage.navigateTologinPage();
-        softAssert.assertTrue(loginPage.checkLoginPageNavigation(), "Navigation to Login page failed");
-        Thread.sleep(3000);
-        loginPage.performExistingUserLogin(username, password);
-        
-        
-        
-        homePage.search(searchtext);
-        Thread.sleep(3000); // Consider using WebDriverWait instead of Thread.sleep
+    @Test(dataProvider = "data-provider", dataProviderClass = DP.class, description = "Verify search and login functionality", priority = 1, groups = {"SearchAndFilterflow"})
+    public void TestCase01(String searchtext, String username, String password) throws InterruptedException, TimeoutException, IOException {
+    extentTest = extentReports.createTest("Search functionality check");
+    logStatus("info", "Starting test case", "Started");
     
-        /* Check if the expected product is displayed
-        boolean isProductDisplayed = homePage.areProductsDisplayed(searchtext);
-        softAssert.assertTrue(isProductDisplayed, "Product containing '" + searchtext + "' is not displayed in the search results");
+    Homepage homePage = new Homepage(driver);
+    softAssert.assertTrue(homePage.checkNavigation(), "Home page navigation failed");
+    extentTest.info("Home page navigation successful");
 
-        // Optionally take a screenshot if the assertion fails
-        if (!isProductDisplayed) {
-            String screenshotPath = capture(driver);
-            extentTest.addScreenCaptureFromPath(screenshotPath);
-        }
+    LoginPage loginPage = new LoginPage(driver);
+    homePage.navigateTologinPage();
+    softAssert.assertTrue(loginPage.checkLoginPageNavigation(), "Login page navigation failed");
+    extentTest.info("Login page navigation successful");
 
-        // Ensure that all assertions are checked at the end
-        softAssert.assertAll(); */
+    loginPage.performExistingUserLogin(username, password);
+    extentTest.info("Login successful for user: " + username);
 
-        boolean isProductDisplayed = homePage.areProductsDisplayed(searchtext);
-        softAssert.assertTrue(isProductDisplayed, "Product '" + searchtext + "' is not displayed in the search results");
-        
+    homePage.search(searchtext);
+    extentTest.info("Search performed for text: " + searchtext);
 
-        // Optionally take a screenshot if the assertion fails
-        if (!isProductDisplayed) {
-            String screenshotPath = capture(driver);
-            extentTest.addScreenCaptureFromPath(screenshotPath);
-            logStatus("screenshot", "Taking screenshot for failed assertion", "Failure");
-            extentTest.fail("Failed to find the product: '" + searchtext + "' in search results.");
-        } else {
-            extentTest.pass("Product '" + searchtext + "' is successfully displayed in search results.");
-        }
+    boolean isProductDisplayed = homePage.areProductsDisplayed(searchtext);
+    softAssert.assertTrue(isProductDisplayed, "Product '" + searchtext + "' not displayed in results");
 
-        // Ensure that all assertions are checked at the end
-        softAssert.assertAll();
-
+    if (!isProductDisplayed) {
+        String screenshotPath = capture(driver);
+        extentTest.addScreenCaptureFromPath(screenshotPath);
+        logStatus("screenshot", "Screenshot captured for failed assertion", "Failure");
+        extentTest.fail("Product not found in search results");
+    } else {
+        extentTest.pass("Product displayed in search results");
     }
+
+    softAssert.assertAll();
+    logStatus("info", "Test case execution completed", "Completed");
+}
+
     public static String capture(WebDriver driver) throws IOException{
    
 

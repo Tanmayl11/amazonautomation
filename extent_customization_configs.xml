@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?> <extentreports>
 <configuration>
 <!-- <!– title ofthe document –>  -->
-<documentTitle>QTrip Regression Suite</documentTitle>
+<documentTitle>Amazon Regression Suite</documentTitle>
 <!-- <!– protocol for script and stylesheets–> -->
 <!-- <!- defaults to https–> -->
 <protocol>http</protocol>
@@ -14,7 +14,7 @@
 <!-- <!–report name = displayed at top-nav with logo–>  -->
 <reportName align="center">
 <!-- <img src=”../logo.png” style=”position:absolute;left:75px;”/>  -->
-<message>Regression test for QTrip</message>
+<message>Regression test for Amazon</message>
 </reportName>
 <!-- <!–locationofchartsinthetestview–>  -->
 <!-- <!–top,bottom–> -->
